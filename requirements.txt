@@ -1,0 +1,28 @@
+# --- API layer ---
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# --- Database ---
+sqlalchemy==2.0.35
+asyncpg==0.29.0
+alembic==1.13.2
+pgvector==0.3.4
+
+# --- Ingestion ---
+feedparser==6.0.11        # RSS/Atom parsing
+httpx==0.27.2              # async HTTP client for API sources + scraping
+selectolax==0.3.21         # fast HTML parsing for scraped sources
+tenacity==9.0.0            # retry logic per source
+
+# --- LLM / embeddings ---
+anthropic==0.34.2
+
+# --- Scheduling (Phase 1: cron/systemd calls the script directly, no extra dep needed) ---
+# Upgrade path if you outgrow cron:
+# prefect==2.20.4
+
+# --- Utilities ---
+python-dotenv==1.0.1
+structlog==24.4.0          # structured logging for observability
