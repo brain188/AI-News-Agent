@@ -8,4 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
-.env.example
+venv/
+
+# Secrets — .env holds real credentials and must never be committed.
+# .env.example is the checked-in template and is intentionally NOT ignored.
+.env
+.env.*
+!.env.example

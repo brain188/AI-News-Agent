@@ -62,7 +62,11 @@ CREATE TABLE article_analysis (
     summary         TEXT NOT NULL,
     category        TEXT NOT NULL CHECK (category IN ('research', 'product', 'funding', 'policy', 'opinion', 'other')),
     relevance_score NUMERIC(4,3) NOT NULL CHECK (relevance_score >= 0 AND relevance_score <= 1),
-    embedding       vector(1536),   -- adjust dimension to match your embedding model
+    -- IMPORTANT: this dimension must match the configured EMBEDDING_MODEL's output
+    -- and app.models.EMBEDDING_DIM. 1536 suits OpenAI text-embedding-3-small;
+    -- voyage-3 (the current .env.example default) emits 1024 — inserting a
+    -- 1024-d vector into a vector(1536) column fails. Change all three together.
+    embedding       vector(1536),
     analyzed_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

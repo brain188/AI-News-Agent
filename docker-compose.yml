@@ -11,9 +11,10 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      # Runs only on first init, i.e. when the pgdata volume is empty.
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U news_agent"]
+      test: ["CMD-SHELL", "pg_isready -U news_agent -d ai_news"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,12 +23,23 @@ services:
     build: .
     container_name: ai_news_api
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      # Optional: a fresh clone has no .env (it is gitignored), and every value
+      # the API needs to boot is defaulted in app/config.py.
+      - path: .env
+        required: false
+    environment:
+      # Overrides the .env value: inside this container "localhost" is the API
+      # itself, so the database must be reached by its compose service name.
+      DATABASE_URL: postgresql+asyncpg://news_agent:changeme@db:5432/ai_news
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+    # Bind-mounted so --reload actually picks up local edits.
+    volumes:
+      - ./app:/app/app:ro
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
