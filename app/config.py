@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # Database
-    database_url: str = "postgresql+asyncpg://news_agent:changeme@localhost:5432/ai_news"
+    database_url: str
 
     # LLM
     anthropic_api_key: str = ""
