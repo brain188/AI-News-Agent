@@ -8,10 +8,18 @@ class Settings(BaseSettings):
     # Database
     database_url: str
 
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    embedding_dimension: int = 384
+
     # LLM
     anthropic_api_key: str = ""
-    embedding_model: str = "voyage-3"
     llm_model: str = "claude-sonnet-4-6"
+    llm_input_cost_per_mtok: float = 3.00
+    llm_output_cost_per_mtok: float = 15.00
+
+    # Enrichment
+    enrichment_batch_size: int = 5
+    max_content_chars_for_llm: int = 3000
 
     # Pipeline
     daily_llm_budget_usd: float = Field(default=2.00, ge=0)

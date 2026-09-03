@@ -71,12 +71,14 @@ async def finish_run(
     attempted: int,
     succeeded: int,
     found: int,
-    errors: list[dict],
+    after_dedup: int = 0,
+    errors: list[dict] | None = None,
 ) -> None:
     """Close out a pipeline run with its final counters and error list."""
     run.finished_at = datetime.now(timezone.utc)
     run.sources_attempted = attempted
     run.sources_succeeded = succeeded
     run.articles_found = found
-    run.errors = errors
+    run.articles_after_dedup = after_dedup
+    run.errors = errors or []
     await db.flush()

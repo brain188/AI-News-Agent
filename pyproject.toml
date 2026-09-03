@@ -22,4 +22,5 @@ dependencies = [
     "anthropic==0.34.2",
     "python-dotenv==1.0.1",
     "structlog==24.4.0",
+    "fastembed==0.4.2",
 ]

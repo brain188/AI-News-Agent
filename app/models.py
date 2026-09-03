@@ -20,7 +20,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 # Must match the vector(N) dimension declared in schema.sql. Changing this alone
 # does not migrate the database — update both, and reindex.
-EMBEDDING_DIM = 1536
+EMBEDDING_DIM = 384
 
 SOURCE_TYPES = ("rss", "api", "scrape")
 SOURCE_STATUSES = ("healthy", "degraded", "broken")
