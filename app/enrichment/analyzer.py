@@ -5,7 +5,7 @@ from anthropic import AsyncAnthropic
 
 from app.config import settings
 from app.core.logging import get_logger
-from app.enrichment.costs import Usage
+from app.enrichment.cost import Usage
 from app.enrichment.embeddings import strip_html
 
 log = get_logger(__name__)

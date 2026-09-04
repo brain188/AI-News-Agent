@@ -1,10 +1,12 @@
+from anthropic import APIError, AuthenticationError, RateLimitError
+
 from app.config import settings
 from app.core.logging import get_logger
 from app.database import AsyncSessionLocal
 from app.enrichment import repository as enrich_repo
 from app.enrichment.analyzer import analyze_batch
 from app.enrichment.clustering import find_nearest_cluster
-from app.enrichment.costs import is_over_budget, spend_today
+from app.enrichment.cost import is_over_budget, spend_today
 from app.enrichment.embeddings import build_embed_text, embed_texts
 from app.pipeline import repository
 
@@ -21,7 +23,7 @@ async def run_enrichment() -> None:
 
         if not articles:
             log.info("no_articles_to_enrich")
-            await repository.finish_run(db, run, 0, 0, 0, [])
+            await repository.finish_run(db, run, 0, 0, 0, errors = [])
             await db.commit()
             return
 
@@ -61,13 +63,22 @@ async def run_enrichment() -> None:
             batch_articles = [article for article, _ in batch]
 
             try:
-                results, usage = await analyze_batch(batch_articles)
-            except Exception as exc:
-                log.error("analysis_failed", error=str(exc))
+                results, _ = await analyze_batch(batch_articles)
+
+            except AuthenticationError as exc:
+                log.error("analysis_authentication_failed", error=str(exc))
+                errors.append({"stage": "analysis", "error": str(exc)})
+                break
+
+            except RateLimitError as exc:
+                log.error("analysis_rate_limit", error=str(exc))
                 errors.append({"stage": "analysis", "error": str(exc)})
                 continue
 
-            total_cost += usage.cost_usd()
+            except APIError as exc:
+                log.error("analysis_api_failed", error=str(exc))
+                errors.append({"stage": "analysis", "error": str(exc)})
+                continue
 
             for index, (article, vector) in enumerate(batch):
                 result = results.get(index)
@@ -89,7 +100,7 @@ async def run_enrichment() -> None:
 
         run.llm_cost_usd = total_cost
         await repository.finish_run(
-            db, run, len(articles), analyzed, len(articles), duplicates, errors
+            db, run, len(articles), analyzed, len(articles), duplicates, errors = errors
         )
         await db.commit()
 

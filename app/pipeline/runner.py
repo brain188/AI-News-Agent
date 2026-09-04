@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime, timedelta, timezone
 
 import httpx
 
@@ -13,6 +14,7 @@ from app.pipeline.filters import apply_prefilter
 log = get_logger(__name__)
 
 MAX_CONCURRENT_SOURCES = 5
+MAX_ARTICLE_AGE_DAYS = 3
 TRUSTED_AUTHORITY_THRESHOLD = 0.85
 
 
@@ -31,13 +33,20 @@ async def _fetch_source(
         trusted = float(source.authority_weight) >= TRUSTED_AUTHORITY_THRESHOLD
         filtered = apply_prefilter(items, trusted=trusted)
 
+        # Feeds like OpenAI's serve their whole archive, so drop anything stale.
+        cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_ARTICLE_AGE_DAYS)
+        recent = [
+            item for item in filtered
+            if item.published_at is None or item.published_at >= cutoff
+        ]
+
         log.info(
             "source_fetched",
             source=source.name,
             fetched=len(items),
-            kept=len(filtered),
+            kept=len(recent),
         )
-        return source, filtered, None
+        return source, recent, None
 
 
 async def run_ingestion() -> None:
@@ -48,7 +57,7 @@ async def run_ingestion() -> None:
 
         if not sources:
             log.info("no_sources_due")
-            await repository.finish_run(db, run, 0, 0, 0, [])
+            await repository.finish_run(db, run, 0, 0, 0, errors = [])
             await db.commit()
             return
 
@@ -77,7 +86,7 @@ async def run_ingestion() -> None:
             await repository.mark_source_result(db, source.id)
 
         await repository.finish_run(
-            db, run, len(sources), succeeded, total_inserted, errors
+            db, run, len(sources), succeeded, total_inserted, errors = errors
         )
         await db.commit()
 
