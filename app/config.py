@@ -12,10 +12,11 @@ class Settings(BaseSettings):
     embedding_dimension: int = 384
 
     # LLM
-    anthropic_api_key: str = ""
-    llm_model: str = "claude-sonnet-4-6"
-    llm_input_cost_per_mtok: float = 3.00
-    llm_output_cost_per_mtok: float = 15.00
+    llm_api_key: str = ""
+    llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    llm_model: str = "gemini-3.5-flash-lite"
+    llm_input_cost_per_mtok: float = 0.30
+    llm_output_cost_per_mtok: float = 2.50
 
     # Enrichment
     enrichment_batch_size: int = 5

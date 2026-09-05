@@ -23,4 +23,5 @@ dependencies = [
     "python-dotenv==1.0.1",
     "structlog==24.4.0",
     "fastembed==0.4.2",
+    "openai==1.54.4",
 ]

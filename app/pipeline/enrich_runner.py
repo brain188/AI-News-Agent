@@ -1,4 +1,4 @@
-from anthropic import APIError, AuthenticationError, RateLimitError
+from openai import APIError, AuthenticationError, RateLimitError
 
 from app.config import settings
 from app.core.logging import get_logger

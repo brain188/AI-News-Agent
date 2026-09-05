@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 
-from anthropic import AsyncAnthropic
+from openai import AsyncOpenAI
 
 from app.config import settings
 from app.core.logging import get_logger
@@ -34,14 +34,17 @@ class AnalysisResult:
     relevance_score: float
 
 
-_client: AsyncAnthropic | None = None
+_client: AsyncOpenAI | None = None
 
 
-def _get_client() -> AsyncAnthropic:
+def _get_client() -> AsyncOpenAI:
     """Lazily build the Anthropic client from configured credentials."""
     global _client
     if _client is None:
-        _client = AsyncAnthropic(api_key=settings.anthropic_api_key)
+        _client = AsyncOpenAI(
+            api_key=settings.llm_api_key,
+            base_url=settings.llm_base_url,
+        )
     return _client
 
 
@@ -70,15 +73,17 @@ def _coerce_result(item: dict) -> AnalysisResult:
 
 async def analyze_batch(articles: list) -> tuple[dict[int, AnalysisResult], Usage]:
     """Summarize and categorize a batch of articles in one LLM call."""
-    response = await _get_client().messages.create(
+    response = await _get_client().chat.completions.create(
         model=settings.llm_model,
         max_tokens=2000,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": _build_prompt(articles)}],
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": _build_prompt(articles)},
+        ],
     )
 
-    usage = Usage(response.usage.input_tokens, response.usage.output_tokens)
-    raw = "".join(block.text for block in response.content if block.type == "text")
+    usage = Usage(response.usage.prompt_tokens, response.usage.completion_tokens)
+    raw = response.choices[0].message.content or ""
     cleaned = raw.replace("```json", "").replace("```", "").strip()
 
     try:
