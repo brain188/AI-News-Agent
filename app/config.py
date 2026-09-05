@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     dedup_similarity_threshold: float = Field(default=0.90, ge=0.0, le=1.0)
     dedup_lookback_hours: int = Field(default=48, ge=1)
 
+    # Agent
+    agent_max_iterations: int = 5
+    agent_search_limit: int = 8
+    tavily_api_key: str = ""  
+
     # App
     api_host: str = "0.0.0.0"
     api_port: int = Field(default=8000, ge=1, le=65535)
