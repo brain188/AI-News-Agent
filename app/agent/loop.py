@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.agent import tools
+from app.agent import citations, tools
 from app.agent.prompts import SYSTEM_PROMPT
 from app.config import settings
 from app.core.logging import get_logger
@@ -34,12 +34,12 @@ class AgentAnswer:
     cost_usd: float = 0.0
 
 
-def _collect_ids(results: list[dict], sink: list[uuid.UUID]) -> None:
-    """Record article ids from tool output so the answer can cite them."""
+def _collect_ids(results: list[dict], sink: set[uuid.UUID]) -> None:
+    """Track which article ids the tools returned, to validate citations against."""
     for item in results:
         raw = item.get("id")
         if raw:
-            sink.append(uuid.UUID(raw))
+            sink.add(uuid.UUID(raw))
 
 
 async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
@@ -49,7 +49,7 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
         {"role": "user", "content": question},
     ]
 
-    cited: list[uuid.UUID] = []
+    retrieved: set[uuid.UUID] = set()
     used_live_search = False
     total_cost = 0.0
 
@@ -67,9 +67,13 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
 
         # No tool calls means the model is done reasoning and has an answer.
         if not message.tool_calls:
+            body, cited = citations.extract(message.content or "", retrieved)
+            if not cited and retrieved:
+                log.info("no_citations_returned", retrieved=len(retrieved))
+
             return AgentAnswer(
-                answer=message.content or "",
-                cited_article_ids=list(dict.fromkeys(cited)),
+                answer=body,
+                cited_article_ids=cited,
                 used_live_search=used_live_search,
                 cost_usd=total_cost,
             )
@@ -82,11 +86,7 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
             try:
                 args = json.loads(call.function.arguments or "{}")
             except json.JSONDecodeError as exc:
-                log.error(
-                    "invalid_tool_arguments",
-                    tool=name,
-                    error=str(exc),
-                )
+                log.error("invalid_tool_arguments", tool=name, error=str(exc))
                 results = [{"error": "Invalid tool arguments"}]
             else:
                 results = await tools.execute(db, name, args)
@@ -94,7 +94,7 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
             if name == "web_search":
                 used_live_search = True
             else:
-                _collect_ids(results, cited)
+                _collect_ids(results, retrieved)
 
             messages.append(
                 {
@@ -107,7 +107,7 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
     log.warning("agent_max_iterations_reached", question=question[:100])
     return AgentAnswer(
         answer="I couldn't reach a conclusion within the allowed number of steps.",
-        cited_article_ids=list(dict.fromkeys(cited)),
+        cited_article_ids=[],
         used_live_search=used_live_search,
         cost_usd=total_cost,
     )
