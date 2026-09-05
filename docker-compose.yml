@@ -4,9 +4,9 @@ services:
     container_name: ai_news_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: bojes
-      POSTGRES_DB: AI_News_Agent
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -14,7 +14,7 @@ services:
       # Runs only on first init, i.e. when the pgdata volume is empty.
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U news_agent -d ai_news"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -31,7 +31,7 @@ services:
     environment:
       # Overrides the .env value: inside this container "localhost" is the API
       # itself, so the database must be reached by its compose service name.
-      DATABASE_URL: postgresql+asyncpg://postgres:bojes@db:5432/AI_News_Agent
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     ports:
       - "8000:8000"
     depends_on:
@@ -41,6 +41,20 @@ services:
     volumes:
       - ./app:/app/app:ro
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: ai_news_worker
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PIPELINE_INTERVAL_SECONDS: 3600
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:
