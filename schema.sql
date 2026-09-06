@@ -84,6 +84,9 @@ CREATE TABLE pipeline_runs (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     started_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
     finished_at         TIMESTAMPTZ,
+    -- Ingest runs count sources in the columns below; enrich runs count articles.
+    kind                TEXT NOT NULL DEFAULT 'ingest'
+                        CHECK (kind IN ('ingest', 'enrich')),
     sources_attempted   INT NOT NULL DEFAULT 0,
     sources_succeeded   INT NOT NULL DEFAULT 0,
     articles_found      INT NOT NULL DEFAULT 0,

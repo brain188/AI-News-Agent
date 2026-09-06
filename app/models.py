@@ -25,6 +25,7 @@ EMBEDDING_DIM = 384
 SOURCE_TYPES = ("rss", "api", "scrape")
 SOURCE_STATUSES = ("healthy", "degraded", "broken")
 CATEGORIES = ("research", "product", "funding", "policy", "opinion", "other")
+RUN_KINDS = ("ingest", "enrich")
 
 
 def utcnow() -> datetime:
@@ -142,6 +143,9 @@ class ArticleAnalysis(Base):
 
 class PipelineRun(Base):
     __tablename__ = "pipeline_runs"
+    __table_args__ = (
+        CheckConstraint(_in_list("kind", RUN_KINDS), name="pipeline_runs_kind_check"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
@@ -150,6 +154,9 @@ class PipelineRun(Base):
         TIMESTAMP(timezone=True), default=utcnow, server_default=func.now()
     )
     finished_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+    # The counter columns below count sources for an "ingest" run and articles
+    # for an "enrich" run — this says which.
+    kind: Mapped[str] = mapped_column(Text, default="ingest", server_default=text("'ingest'"))
     sources_attempted: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     sources_succeeded: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     articles_found: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))

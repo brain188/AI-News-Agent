@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, HTTPException
 
 from app.agent.loop import run_agent
 from app.core.logging import get_logger
-from app.database import get_db
+from app.database import DbSession
 from app.models import AgentQuery
+from app.routers.articles import fetch_articles_by_id
 from app.schemas import AskRequest, AskResponse
 
 log = get_logger(__name__)
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/ask", tags=["ask"])
 
 
 @router.post("", response_model=AskResponse)
-async def ask_agent(payload: AskRequest, db: AsyncSession = Depends(get_db)):
+async def ask_agent(payload: AskRequest, db: DbSession):
     """Answer a natural-language question using stored articles or live search."""
     question = payload.question.strip()
     if not question:
@@ -24,6 +24,9 @@ async def ask_agent(payload: AskRequest, db: AsyncSession = Depends(get_db)):
     except Exception as exc:
         log.error("agent_failed", error=str(exc))
         raise HTTPException(status_code=502, detail="Agent failed to answer") from exc
+
+    # Resolve citations here so the answer and its evidence arrive together.
+    cited_articles = await fetch_articles_by_id(db, result.cited_article_ids)
 
     db.add(
         AgentQuery(
@@ -45,5 +48,6 @@ async def ask_agent(payload: AskRequest, db: AsyncSession = Depends(get_db)):
     return AskResponse(
         answer=result.answer,
         cited_article_ids=result.cited_article_ids,
+        cited_articles=cited_articles,
         used_live_search=result.used_live_search,
     )

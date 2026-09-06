@@ -57,9 +57,9 @@ async def mark_source_result(
     await db.execute(update(Source).where(Source.id == source_id).values(**values))
 
 
-async def start_run(db: AsyncSession) -> PipelineRun:
+async def start_run(db: AsyncSession, kind: str = "ingest") -> PipelineRun:
     """Create and persist a new pipeline run record."""
-    run = PipelineRun(started_at=datetime.now(timezone.utc))
+    run = PipelineRun(started_at=datetime.now(timezone.utc), kind=kind)
     db.add(run)
     await db.flush()
     return run

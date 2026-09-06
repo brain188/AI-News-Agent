@@ -18,7 +18,7 @@ MAX_ARTICLES_PER_RUN = 200
 async def run_enrichment() -> None:
     """Embed, deduplicate, and summarize all unclustered articles."""
     async with AsyncSessionLocal() as db:
-        run = await repository.start_run(db)
+        run = await repository.start_run(db, kind="enrich")
         articles = await enrich_repo.get_unanalyzed_articles(db, MAX_ARTICLES_PER_RUN)
 
         if not articles:

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline": "#859490",
+          "primary-container": "#2dd4bf",
+          "error": "#ffb4ab",
+          "on-secondary-container": "#00374d",
+          "background": "#10141a",
+          "on-primary-fixed": "#00201c",
+          "on-tertiary-container": "#744000",
+          "surface-bright": "#353940",
+          "tertiary-fixed": "#ffdcc0",
+          "primary-fixed-dim": "#3cddc7",
+          "surface-container-high": "#262a31",
+          "on-primary": "#003731",
+          "primary-fixed": "#62fae3",
+          "on-surface-variant": "#bacac5",
+          "surface-container-low": "#181c22",
+          "secondary-container": "#00a6e0",
+          "on-secondary-fixed": "#001e2c",
+          "primary": "#57f1db",
+          "inverse-on-surface": "#2d3137",
+          "surface-container-highest": "#31353c",
+          "tertiary-container": "#ffac5a",
+          "on-secondary-fixed-variant": "#004c69",
+          "secondary-fixed-dim": "#7bd0ff",
+          "on-error-container": "#ffdad6",
+          "on-primary-fixed-variant": "#005047",
+          "on-secondary": "#00354a",
+          "secondary": "#7bd0ff",
+          "surface-dim": "#10141a",
+          "inverse-surface": "#dfe2eb",
+          "on-tertiary-fixed": "#2d1600",
+          "on-primary-container": "#00574d",
+          "on-background": "#dfe2eb",
+          "on-tertiary-fixed-variant": "#6b3b00",
+          "tertiary-fixed-dim": "#ffb875",
+          "tertiary": "#ffd1aa",
+          "surface-tint": "#3cddc7",
+          "secondary-fixed": "#c4e7ff",
+          "outline-variant": "#3c4a46",
+          "surface-variant": "#31353c",
+          "on-surface": "#dfe2eb",
+          "on-error": "#690005",
+          "on-tertiary": "#4b2800",
+          "surface-container": "#1c2026",
+          "surface": "#10141a",
+          "inverse-primary": "#006b5f",
+          "error-container": "#93000a",
+          "surface-container-lowest": "#0a0e14"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "gutter-mobile": "0.5rem",
+          "space-sm": "0.5rem",
+          "space-base": "1rem",
+          "space-xs": "0.25rem",
+          "space-lg": "1.5rem",
+          "gutter-desktop": "1rem",
+          "inspector-width": "22rem",
+          "space-2xs": "0.125rem",
+          "space-xl": "2rem",
+          "space-md": "0.75rem",
+          "sidebar-width": "16rem"
+        },
+        "fontFamily": {
+          "label-sm": [
+            "JetBrains Mono"
+          ],
+          "headline-lg": [
+            "JetBrains Mono"
+          ],
+          "label-md": [
+            "JetBrains Mono"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-sm": [
+            "JetBrains Mono"
+          ],
+          "headline-md": [
+            "JetBrains Mono"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "code-inline": [
+            "JetBrains Mono"
+          ],
+          "headline-lg-mobile": [
+            "JetBrains Mono"
+          ],
+          "body-md": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "label-sm": [
+            "0.6875rem",
+            {
+              "lineHeight": "0.875rem",
+              "letterSpacing": "0.06em",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-lg": [
+            "1.5rem",
+            {
+              "lineHeight": "2rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "0.75rem",
+            {
+              "lineHeight": "1rem",
+              "letterSpacing": "0.04em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-lg": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.6rem",
+              "letterSpacing": "-0.011em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-sm": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.375rem",
+              "letterSpacing": "0em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "1.125rem",
+            {
+              "lineHeight": "1.5rem",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-sm": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.375rem",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "code-inline": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.25rem",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "1.25rem",
+            {
+              "lineHeight": "1.75rem",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "0.875rem",
+            {
+              "lineHeight": "1.5rem",
+              "letterSpacing": "-0.006em",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-14 w-full px-gutter-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">terminal</span><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">ai-news-agent</span><span class="font-label-sm text-label-sm text-outline-variant">v1.4</span></div><div class="hidden lg:flex items-center gap-space-xs px-space-xs py-space-2xs rounded bg-surface-container"><span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">daemon: active <span class="text-outline">(pid 14209)</span></span></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-semibold rounded"><a aria-current="page" class="relative flex items-center gap-space-xs px-space-sm py-space-xs transition-colors bg-surface-container-high text-on-surface font-semibold rounded" data-path="feed" href="#"><span>Feed</span><span class="px-1.5 py-0.2 rounded bg-surface-container-highest text-primary font-label-sm text-label-sm font-semibold">142</span></a><a class="flex items-center px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ask-agent" href="#">Ask Agent</a><a class="flex items-center px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pipeline-health-and-sources" href="#">Pipeline Health &amp; Sources</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-space-xs"><span class="flex items-center gap-1 px-space-xs py-space-2xs rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant"><span class="text-outline">⌘K</span> search</span><span class="flex items-center gap-1 px-space-xs py-space-2xs rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant"><span class="text-outline">r</span> refresh</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-background min-h-screen"><div class="max-w-5xl mx-auto px-gutter-desktop py-space-md"><div class="flex flex-col w-full">
+<!-- Top Operational Telemetry Strip -->
+<section class="w-full bg-surface-container-low rounded-lg p-space-sm mb-space-base shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="text-on-surface-variant">Last ingestion:</span>
+<span class="text-on-surface font-semibold font-code-inline">14m ago</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface-variant">Sources:</span>
+<span class="text-primary font-semibold font-code-inline">48/50 healthy</span>
+<span class="text-tertiary-container text-[0.625rem] px-1 py-0.5 rounded bg-surface-container font-mono tracking-tight font-medium">2 warning</span>
+</div>
+<div class="hidden sm:flex items-center gap-1.5">
+<span class="text-on-surface-variant">Ingested 24h:</span>
+<span class="text-on-surface font-semibold font-code-inline">312 items</span>
+</div>
+<!-- Inline Sparkline SVG: Hourly Ingest Distribution -->
+<div class="flex items-center gap-1.5 pl-1">
+<span class="text-outline text-[0.625rem]">24h vol:</span>
+<svg aria-label="Ingest sparkline graph" class="w-28 h-4 text-primary-container" fill="none" viewbox="0 0 112 16" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 14L5 12L10 13L15 9L20 11L25 7L30 10L35 8L40 12L45 6L50 9L55 4L60 7L65 5L70 8L75 3L80 5L85 2L90 4L95 1L100 5L105 3L112 2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+<circle cx="112" cy="2" fill="currentColor" r="1.5"></circle>
+</svg>
+</div>
+</div>
+<button class="self-start md:self-auto inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-surface-container hover:bg-surface-container-high transition-colors font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface focus:outline-none" id="toggle-status-btn">
+<span class="material-symbols-outlined text-[14px]" id="toggle-status-icon">expand_more</span>
+<span>expand status</span>
+</button>
+</div>
+<!-- Collapsible Diagnostics Drawer -->
+<div class="hidden mt-space-sm pt-space-xs" id="status-drawer">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-surface-container-lowest p-space-sm rounded">
+<div class="space-y-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-tertiary font-medium">arxiv-rss</span>
+<span class="text-outline">HTTP 429 · backoff 300s · retry #3</span>
+</div>
+<p class="font-code-inline text-[0.6875rem] text-on-surface-variant truncate">GET https://arxiv.org/rss/cs.AI - Rate limit threshold exceeded</p>
+</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-tertiary font-medium">semi-analysis</span>
+<span class="text-outline">Latency 2840ms · parsing degradation</span>
+</div>
+<p class="font-code-inline text-[0.6875rem] text-on-surface-variant truncate">DOM schema drift detected: main &gt; article &gt; section.post-body</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Filter & Control Toolbar -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-sm mb-space-base bg-surface-container-low px-space-sm py-space-xs rounded-lg">
+<!-- Category multi-select pills -->
+<div class="flex flex-wrap items-center gap-1.5">
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-surface-container text-on-surface-variant hover:text-on-surface" data-cat="all">
+        All
+      </button>
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-primary-container/20 text-primary-container font-semibold" data-cat="research">
+        research
+      </button>
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-secondary-container/20 text-secondary-fixed-dim font-semibold" data-cat="product">
+        product
+      </button>
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-surface-container text-on-surface-variant hover:text-on-surface" data-cat="funding">
+        funding
+      </button>
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-surface-container text-on-surface-variant hover:text-on-surface" data-cat="policy">
+        policy
+      </button>
+<button class="cat-pill px-space-sm py-0.5 rounded font-label-sm text-label-sm transition-colors bg-surface-container text-on-surface-variant hover:text-on-surface" data-cat="opinion">
+        opinion
+      </button>
+</div>
+<!-- Sort Segmented Switch -->
+<div class="flex items-center gap-space-xs self-end lg:self-auto font-label-sm text-label-sm">
+<div class="flex items-center bg-surface-container-lowest p-0.5 rounded">
+<button class="px-space-sm py-0.5 rounded bg-surface-container-high text-primary font-semibold transition-all" id="sort-rel">
+          most relevant
+        </button>
+<button class="px-space-sm py-0.5 rounded text-on-surface-variant hover:text-on-surface transition-all" id="sort-recent">
+          most recent
+        </button>
+</div>
+<span class="hidden sm:inline-block px-1.5 py-0.5 rounded bg-surface-container text-outline text-[0.625rem] font-code-inline font-medium">[s] toggle</span>
+</div>
+</div>
+<!-- Stream of High-Density Technical Articles -->
+<div class="flex flex-col gap-space-sm w-full">
+<!-- Card 1 -->
+<article class="group bg-surface-container-low hover:bg-surface-container transition-all duration-150 rounded-lg p-space-base shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<!-- Metadata Header -->
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-sm text-[0.6875rem] font-semibold tracking-wide uppercase">research</span>
+<span class="text-on-surface-variant font-code-inline">arxiv.org (cs.AI)</span>
+<span class="text-outline">•</span>
+<span class="font-code-inline text-outline">2h ago</span>
+</div>
+<!-- Relevance Meter -->
+<div class="flex items-center gap-2" title="Relevance: 96%">
+<span class="text-[0.6875rem] font-code-inline text-primary-container">score 96</span>
+<div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 96%"></div>
+</div>
+</div>
+</div>
+<!-- Dominant Headline -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors cursor-pointer leading-snug">
+          DeepSeek-V3 MoE Architecture: Multi-head Latent Attention and DualPipe Parallelism
+        </h2>
+<!-- Technical Summary -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Evaluation of the FP8 mixed-precision training framework and auxiliary-loss-free load balancing strategy. Highlights 40% memory bandwidth reduction in inter-node all-to-all communication across 2,048 H800 GPUs.
+        </p>
+<!-- Multi-source Expandable Row -->
+<div class="pt-space-xs mt-space-2xs">
+<button class="multi-source-toggle inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:text-secondary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-[14px] transition-transform">arrow_drop_down</span>
+<span>also covered by 4 sources (The Gradient, SemiAnalysis, Twitter/X, Hacker News)</span>
+</button>
+<div class="source-drawer hidden mt-space-xs pl-space-sm py-space-xs space-y-1 bg-surface-container-lowest rounded font-code-inline text-[0.6875rem] text-on-surface-variant">
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">semianalysis.com: "DeepSeek-V3 Economics &amp; Interconnect Analysis"</span>
+<span class="text-outline">+1h 12m</span>
+</div>
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">thegradient.pub: "Architectural Deep Dive: MLA vs GQA"</span>
+<span class="text-outline">+1h 45m</span>
+</div>
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">news.ycombinator.com: "DeepSeek V3 Model Weights Released (685 pts)"</span>
+<span class="text-outline">+2h 05m</span>
+</div>
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">x.com/researchers: "Comparative Benchmark on vLLM and TensorRT-LLM"</span>
+<span class="text-outline">+2h 18m</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="group bg-surface-container-low hover:bg-surface-container transition-all duration-150 rounded-lg p-space-base shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-secondary-container/15 text-secondary-fixed-dim font-label-sm text-[0.6875rem] font-semibold tracking-wide uppercase">product</span>
+<span class="text-on-surface-variant font-code-inline">servethehome.com</span>
+<span class="text-outline">•</span>
+<span class="font-code-inline text-outline">4h ago</span>
+</div>
+<div class="flex items-center gap-2" title="Relevance: 91%">
+<span class="text-[0.6875rem] font-code-inline text-secondary">score 91</span>
+<div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 91%"></div>
+</div>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors cursor-pointer leading-snug">
+          NVIDIA Releases Quantum-X800 InfiniBand Architecture for Large-Scale AI Clusters
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Introduces 800Gb/s per port throughput with in-network computing engines for collective communication reduction. Directly targets PCIe Gen 6 bottlenecks in ultra-dense distributed transformer workloads.
+        </p>
+<div class="pt-space-xs mt-space-2xs">
+<button class="multi-source-toggle inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:text-secondary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-[14px] transition-transform">arrow_drop_down</span>
+<span>also covered by 2 sources (AnandTech, NextPlatform)</span>
+</button>
+<div class="source-drawer hidden mt-space-xs pl-space-sm py-space-xs space-y-1 bg-surface-container-lowest rounded font-code-inline text-[0.6875rem] text-on-surface-variant">
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">nextplatform.com: "The Optical Switching Fabric of Quantum-X800"</span>
+<span class="text-outline">+32m</span>
+</div>
+<div class="flex items-center justify-between pr-2">
+<span class="text-on-surface">anandtech.com: "SHARP v4 Acceleration for In-Network Reductions"</span>
+<span class="text-outline">+1h 10m</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="group bg-surface-container-low hover:bg-surface-container transition-all duration-150 rounded-lg p-space-base shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-tertiary-container/15 text-tertiary font-label-sm text-[0.6875rem] font-semibold tracking-wide uppercase">policy</span>
+<span class="text-on-surface-variant font-code-inline">eur-lex.europa.eu</span>
+<span class="text-outline">•</span>
+<span class="font-code-inline text-outline">7h ago</span>
+</div>
+<div class="flex items-center gap-2" title="Relevance: 84%">
+<span class="text-[0.6875rem] font-code-inline text-on-surface-variant">score 84</span>
+<div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-outline rounded-full" style="width: 84%"></div>
+</div>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors cursor-pointer leading-snug">
+          EU AI Act Technical Standards Committee Issues Draft Telemetry &amp; Logging Guidance for Tier 1 Providers
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Compliance specs require deterministic audit trails for frontier weight checkpoints and compute allocation verification. Outlines network interface logging obligations for training data provenance.
+        </p>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="group bg-surface-container-low hover:bg-surface-container transition-all duration-150 rounded-lg p-space-base shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-surface-bright text-on-surface-variant font-label-sm text-[0.6875rem] font-semibold tracking-wide uppercase">funding</span>
+<span class="text-on-surface-variant font-code-inline">techcrunch.com</span>
+<span class="text-outline">•</span>
+<span class="font-code-inline text-outline">11h ago</span>
+</div>
+<div class="flex items-center gap-2" title="Relevance: 76%">
+<span class="text-[0.6875rem] font-code-inline text-on-surface-variant">score 76</span>
+<div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-outline rounded-full" style="width: 76%"></div>
+</div>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors cursor-pointer leading-snug">
+          Decentralized Pre-training Run 'Project OpenCompute' Secures $45M Series A
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Protocol leverages heterogeneous consumer GPUs with fault-tolerant checkpointing to train 70B parameter open-weight models. Addresses cross-datacenter latency constraints via sparse gradient aggregation.
+        </p>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="group bg-surface-container-low hover:bg-surface-container transition-all duration-150 rounded-lg p-space-base shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-surface-bright text-tertiary-fixed-dim font-label-sm text-[0.6875rem] font-semibold tracking-wide uppercase">opinion</span>
+<span class="text-on-surface-variant font-code-inline">danluu.com</span>
+<span class="text-outline">•</span>
+<span class="font-code-inline text-outline">14h ago</span>
+</div>
+<div class="flex items-center gap-2" title="Relevance: 72%">
+<span class="text-[0.6875rem] font-code-inline text-on-surface-variant">score 72</span>
+<div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-outline rounded-full" style="width: 72%"></div>
+</div>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors cursor-pointer leading-snug">
+          Opinion: Why In-Network Packet Pruning Will Outpace Speculative Decoding in 2025
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Analysis arguing switch-level acceleration of token KV-cache eviction offers superior latency gains compared to purely algorithmic speculation. Emphasizes hardware fabric co-design over parameter shrinkage.
+        </p>
+</div>
+</article>
+</div>
+<!-- Bottom Stream Synchronization Status Indicator -->
+<div class="mt-space-base py-space-sm flex items-center justify-between font-label-sm text-label-sm text-outline">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>end of buffered segment · next poll in 16s</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-code-inline text-[0.625rem] text-on-surface-variant">cursor: 0x9f1a2e</span>
+<button class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors">
+        fetch earlier
+      </button>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Expand / collapse pipeline diagnostics drawer
+    const toggleBtn = document.getElementById('toggle-status-btn');
+    const drawer = document.getElementById('status-drawer');
+    const icon = document.getElementById('toggle-status-icon');
+
+    if (toggleBtn && drawer && icon) {
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = drawer.classList.contains('hidden');
+        if (isHidden) {
+          drawer.classList.remove('hidden');
+          icon.textContent = 'expand_less';
+          toggleBtn.querySelector('span:last-child').textContent = 'collapse status';
+        } else {
+          drawer.classList.add('hidden');
+          icon.textContent = 'expand_more';
+          toggleBtn.querySelector('span:last-child').textContent = 'expand status';
+        }
+      });
+    }
+
+    // Toggle multi-source nested items
+    document.querySelectorAll('.multi-source-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const container = btn.parentElement;
+        const subDrawer = container.querySelector('.source-drawer');
+        const chevron = btn.querySelector('.material-symbols-outlined');
+        if (subDrawer) {
+          const isClosed = subDrawer.classList.contains('hidden');
+          if (isClosed) {
+            subDrawer.classList.remove('hidden');
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
+          } else {
+            subDrawer.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        }
+      });
+    });
+
+    // Category pill toggle interaction
+    const pills = document.querySelectorAll('.cat-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const cat = pill.getAttribute('data-cat');
+        if (cat === 'all') {
+          pills.forEach(p => {
+            p.classList.remove('bg-primary-container/20', 'text-primary-container', 'bg-secondary-container/20', 'text-secondary-fixed-dim', 'font-semibold');
+            p.classList.add('bg-surface-container', 'text-on-surface-variant');
+          });
+          pill.classList.add('bg-primary-container/20', 'text-primary-container', 'font-semibold');
+          pill.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        } else {
+          const allPill = document.querySelector('.cat-pill[data-cat="all"]');
+          if (allPill) {
+            allPill.classList.remove('bg-primary-container/20', 'text-primary-container', 'font-semibold');
+            allPill.classList.add('bg-surface-container', 'text-on-surface-variant');
+          }
+          pill.classList.toggle('bg-primary-container/20');
+          pill.classList.toggle('text-primary-container');
+          pill.classList.toggle('font-semibold');
+        }
+      });
+    });
+
+    // Sort switch toggle + [s] hotkey
+    const sortRel = document.getElementById('sort-rel');
+    const sortRecent = document.getElementById('sort-recent');
+
+    function setSort(mode) {
+      if (mode === 'relevant') {
+        sortRel.classList.add('bg-surface-container-high', 'text-primary', 'font-semibold');
+        sortRel.classList.remove('text-on-surface-variant');
+        sortRecent.classList.remove('bg-surface-container-high', 'text-primary', 'font-semibold');
+        sortRecent.classList.add('text-on-surface-variant');
+      } else {
+        sortRecent.classList.add('bg-surface-container-high', 'text-primary', 'font-semibold');
+        sortRecent.classList.remove('text-on-surface-variant');
+        sortRel.classList.remove('bg-surface-container-high', 'text-primary', 'font-semibold');
+        sortRel.classList.add('text-on-surface-variant');
+      }
+    }
+
+    if (sortRel && sortRecent) {
+      sortRel.addEventListener('click', () => setSort('relevant'));
+      sortRecent.addEventListener('click', () => setSort('recent'));
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 's' || e.key === 'S') {
+          e.preventDefault();
+          const isRelevantActive = sortRel.classList.contains('text-primary');
+          setSort(isRelevantActive ? 'recent' : 'relevant');
+        }
+      });
+    }
+  })();
+</script></div></main><footer class="w-full bg-surface-container-lowest py-space-sm"><div class="max-w-5xl mx-auto px-gutter-desktop flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>system: stream synchronized</span><span class="text-outline">polling cycle: 30s • memory: 284MB</span></div></footer></body></html>
