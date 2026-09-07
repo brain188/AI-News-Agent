@@ -61,6 +61,8 @@ class Source(Base):
     )
     status: Mapped[str] = mapped_column(Text, default="healthy", server_default=text("'healthy'"))
     last_fetched_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+    # Advances only on a successful fetch, unlike last_fetched_at.
+    last_success_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
     last_error: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=utcnow, server_default=func.now()

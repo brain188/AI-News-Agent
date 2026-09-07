@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select, update
 from sqlalchemy.dialects.postgresql import insert
@@ -12,7 +12,7 @@ from app.models import Article, PipelineRun, Source
 async def get_due_sources(db: AsyncSession) -> list[Source]:
     """Return sources never fetched or older than their fetch interval."""
     result = await db.execute(select(Source).where(Source.status != "broken"))
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     due = []
     for source in result.scalars():
@@ -50,16 +50,20 @@ async def mark_source_result(
 ) -> None:
     """Record the outcome of a fetch attempt against the source row."""
     values = {
-        "last_fetched_at": datetime.now(timezone.utc),
+        "last_fetched_at": datetime.now(UTC),
         "last_error": error,
         "status": "degraded" if error else "healthy",
     }
+    # Only advance the success marker when the fetch actually worked
+    if not error:
+        values["last_success_at"] = datetime.now(UTC)
+
     await db.execute(update(Source).where(Source.id == source_id).values(**values))
 
 
 async def start_run(db: AsyncSession, kind: str = "ingest") -> PipelineRun:
     """Create and persist a new pipeline run record."""
-    run = PipelineRun(started_at=datetime.now(timezone.utc), kind=kind)
+    run = PipelineRun(started_at=datetime.now(UTC), kind=kind)
     db.add(run)
     await db.flush()
     return run
@@ -75,7 +79,7 @@ async def finish_run(
     errors: list[dict] | None = None,
 ) -> None:
     """Close out a pipeline run with its final counters and error list."""
-    run.finished_at = datetime.now(timezone.utc)
+    run.finished_at = datetime.now(UTC)
     run.sources_attempted = attempted
     run.sources_succeeded = succeeded
     run.articles_found = found

@@ -1,4 +1,5 @@
 import uuid
+from collections.abc import Iterable
 from datetime import datetime
 from typing import Annotated, Literal
 
@@ -115,13 +116,26 @@ async def get_article(article_id: uuid.UUID, db: DbSession):
     return _to_article_out(row)
 
 
+async def fetch_articles_map(
+    db: AsyncSession, ids: Iterable[uuid.UUID]
+) -> dict[uuid.UUID, ArticleOut]:
+    """Load many articles by id in one statement, keyed by id.
+
+    History pages resolve citations for every entry at once; going one entry at
+    a time would be a query per row.
+    """
+    unique = list(dict.fromkeys(ids))
+    if not unique:
+        return {}
+    result = await db.execute(_base_query().where(Article.id.in_(unique)))
+    return {row[0].id: _to_article_out(row) for row in result.all()}
+
+
 async def fetch_articles_by_id(db: AsyncSession, ids: list[uuid.UUID]) -> list[ArticleOut]:
     """Load articles by id, returned in the order the ids were given.
 
-    Used to attach an agent answer's citations to the answer itself.
+    Used to attach an agent answer's citations to the answer itself. Ids that no
+    longer resolve — the article was deleted since — are dropped.
     """
-    if not ids:
-        return []
-    result = await db.execute(_base_query().where(Article.id.in_(ids)))
-    by_id = {row[0].id: _to_article_out(row) for row in result.all()}
+    by_id = await fetch_articles_map(db, ids)
     return [by_id[i] for i in ids if i in by_id]

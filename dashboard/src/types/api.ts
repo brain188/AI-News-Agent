@@ -45,6 +45,16 @@ export interface AskResponse {
   used_live_search: boolean;
 }
 
+/** One past question, as returned by GET /ask/history. */
+export interface AgentQuery {
+  id: string;
+  question: string;
+  answer: string | null;
+  cited_articles: Article[];
+  used_live_search: boolean;
+  created_at: string;
+}
+
 export interface DailyCount {
   /** ISO date, e.g. "2026-09-06". */
   day: string;
@@ -98,6 +108,8 @@ export interface Source {
   fetch_interval_minutes: number;
   authority_weight: number;
   last_fetched_at: string | null;
+  /** Advances only on a successful fetch, unlike last_fetched_at. */
+  last_success_at: string | null;
   last_error: string | null;
   articles_last_24h: number;
 }

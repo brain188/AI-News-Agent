@@ -34,10 +34,16 @@ there is no second page and no URL worth deep-linking to yet.
 | Tab | Component | Reads |
 | --- | --- | --- |
 | Feed | `components/feed/ArticleFeed` | `GET /articles`, `GET /stats`, `GET /sources` |
-| Ask Agent | `components/ask/AskPanel` | `POST /ask`, `GET /stats`, `GET /sources` |
+| Ask Agent | `components/ask/AskPanel` | `POST /ask`, `GET`/`DELETE /ask/history`, `GET /stats`, `GET /sources` |
 | Pipeline Health & Sources | `components/health/PipelineHealth` | `GET /stats`, `GET /stats/runs`, `GET /sources` |
 
 Keyboard: `s` toggles the feed's sort order, `r` refetches everything.
+
+The Ask tab's right rail keeps a query history. Selecting an entry replays its
+stored answer and citations into the answer pane; the pane renders from one
+`ActiveAnswer` value (`lib/answer.ts`) so a live run and a replayed entry take
+the same path. Asking a question invalidates the `["ask-history"]` query, so a
+new entry appears without a reload.
 
 ## Design
 
@@ -47,6 +53,8 @@ against:
 
 - `main-feed.html`
 - `ask-panel.html`
+- `ask-history-option-a.html` — right-rail query history, the chosen option
+- `ask-empty-state.html` — the new-operator state
 - `pipeline-health.html`
 - `mark.svg` — the app mark, also `public/favicon.svg`
 
@@ -70,10 +78,10 @@ src/
 ├── components/
 │   ├── shell/    header, footer
 │   ├── feed/     article list, filters, sort, telemetry strip
-│   ├── ask/      prompt shell, answer, citations, agent rail
+│   ├── ask/      prompt shell, answer, citations, agent rail, query history
 │   ├── health/   KPIs, volume chart, source matrix, run log
 │   └── ui/       category tag, icon, spinner, empty and error states
-└── lib/          formatting and category styling
+└── lib/          formatting, category styling, answer normalisation
 ```
 
 ## Checks

@@ -47,6 +47,7 @@ async def list_sources(db: DbSession):
             fetch_interval_minutes=source.fetch_interval_minutes,
             authority_weight=float(source.authority_weight),
             last_fetched_at=source.last_fetched_at,
+            last_success_at=source.last_success_at,
             last_error=source.last_error,
             articles_last_24h=int(recent_count),
         )

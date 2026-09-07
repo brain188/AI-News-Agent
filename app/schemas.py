@@ -82,6 +82,7 @@ class SourceOut(BaseModel):
     fetch_interval_minutes: int
     authority_weight: float
     last_fetched_at: datetime | None
+    last_success_at: datetime | None = None
     last_error: str | None
     articles_last_24h: int = 0
 
@@ -100,3 +101,16 @@ class AskResponse(BaseModel):
     # one round trip per citation. Same order as cited_article_ids.
     cited_articles: list[ArticleOut] = []
     used_live_search: bool
+
+
+class AgentQueryOut(BaseModel):
+    """One past question, with its answer and the evidence behind it."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    question: str
+    answer: str | None
+    cited_articles: list[ArticleOut] = []
+    used_live_search: bool
+    created_at: datetime

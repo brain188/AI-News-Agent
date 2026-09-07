@@ -2,13 +2,12 @@ import type { ReactNode } from "react";
 
 import { duration, hostname, relativeTime, scoreOutOf100 } from "../../lib/format";
 import { categoryStyle } from "../../lib/categories";
-import type { AskResponse } from "../../types/api";
+import type { ActiveAnswer } from "../../lib/answer";
+import type { Article } from "../../types/api";
 import { Icon } from "../ui/Icon";
 
 interface AnswerBlockProps {
-  result: AskResponse;
-  /** Wall-clock seconds the request took, measured client-side. */
-  elapsedSeconds: number | null;
+  result: ActiveAnswer;
 }
 
 /** `**bold**` is the only markup the agent reliably emits; render just that. */
@@ -55,7 +54,7 @@ function toBlocks(answer: string): Block[] {
 }
 
 /** One grounding source, on the connector line under the synthesis. */
-function CitationCard({ article }: { article: AskResponse["cited_articles"][number] }) {
+function CitationCard({ article }: { article: Article }) {
   const style = categoryStyle(article.category);
   const score = scoreOutOf100(article.relevance_score);
 
@@ -110,7 +109,7 @@ function CitationCard({ article }: { article: AskResponse["cited_articles"][numb
   );
 }
 
-export function AnswerBlock({ result, elapsedSeconds }: AnswerBlockProps) {
+export function AnswerBlock({ result }: AnswerBlockProps) {
   const blocks = toBlocks(result.answer);
   const lead = blocks.find((block) => block.marker === null);
   const points = blocks.filter((block) => block.marker !== null);
@@ -124,9 +123,15 @@ export function AnswerBlock({ result, elapsedSeconds }: AnswerBlockProps) {
           <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">
             Synthesis Completed
           </span>
-          {elapsedSeconds !== null ? (
+          {/* A replayed entry has no elapsed time — saying when it was asked
+              is the honest equivalent. */}
+          {result.elapsedSeconds !== null ? (
             <span className="text-outline font-label-sm text-label-sm ml-space-xs">
-              generated in {duration(elapsedSeconds)}
+              generated in {duration(result.elapsedSeconds)}
+            </span>
+          ) : result.createdAt ? (
+            <span className="text-outline font-label-sm text-label-sm ml-space-xs">
+              from history · {relativeTime(result.createdAt)}
             </span>
           ) : null}
         </div>

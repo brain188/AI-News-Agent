@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import type { Stats } from "../../types/api";
 import { Icon } from "../ui/Icon";
 
@@ -13,14 +11,22 @@ const SUGGESTIONS = [
 const MIN_LENGTH = 3;
 
 interface AskInputProps {
+  /** Controlled: starters and replayed history entries write into this. */
+  value: string;
+  onChange: (value: string) => void;
   onSubmit: (question: string) => void;
   isPending: boolean;
   stats?: Stats;
 }
 
 /** The command shell: model context on top, a prompt line, then suggestions. */
-export function AskInput({ onSubmit, isPending, stats }: AskInputProps) {
-  const [value, setValue] = useState("");
+export function AskInput({
+  value,
+  onChange,
+  onSubmit,
+  isPending,
+  stats,
+}: AskInputProps) {
   const canSubmit = value.trim().length >= MIN_LENGTH && !isPending;
 
   function submit() {
@@ -56,7 +62,7 @@ export function AskInput({ onSubmit, isPending, stats }: AskInputProps) {
           type="text"
           value={value}
           disabled={isPending}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter") submit();
           }}
@@ -93,7 +99,7 @@ export function AskInput({ onSubmit, isPending, stats }: AskInputProps) {
             type="button"
             disabled={isPending}
             onClick={() => {
-              setValue(suggestion);
+              onChange(suggestion);
               onSubmit(suggestion);
             }}
             className="px-space-xs py-space-2xs rounded bg-surface-container-high hover:bg-surface-bright text-on-surface-variant font-label-sm text-label-sm transition-colors disabled:opacity-40"

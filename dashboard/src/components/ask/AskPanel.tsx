@@ -1,14 +1,16 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { useAsk } from "../../hooks/useAsk";
+import { fromHistory, fromResponse, type ActiveAnswer } from "../../lib/answer";
 import { relativeTime } from "../../lib/format";
-import type { Source, Stats } from "../../types/api";
-import { EmptyState } from "../ui/EmptyState";
+import type { AgentQuery, Source, Stats } from "../../types/api";
 import { ErrorState } from "../ui/ErrorState";
 import { Icon } from "../ui/Icon";
 import { AgentStream } from "./AgentStream";
 import { AnswerBlock } from "./AnswerBlock";
+import { AskEmptyState } from "./AskEmptyState";
 import { AskInput } from "./AskInput";
+import { ChatHistory } from "./ChatHistory";
 
 interface AskPanelProps {
   stats?: Stats;
@@ -55,21 +57,45 @@ function MicroStrip({ stats }: { stats?: Stats }) {
 
 export function AskPanel({ stats, sources }: AskPanelProps) {
   const ask = useAsk();
-  const [elapsed, setElapsed] = useState<number | null>(null);
-  const startedAt = useRef<number>(0);
+  const [question, setQuestion] = useState("");
+  // The answer pane renders from here whether the answer just arrived or was
+  // replayed from history, so both paths write to one piece of state.
+  const [activeAnswer, setActiveAnswer] = useState<ActiveAnswer | null>(null);
+  const startedAt = useRef(0);
 
-  function submit(question: string) {
-    startedAt.current = Date.now();
-    setElapsed(null);
-    ask.mutate(question, {
-      onSettled: () => setElapsed((Date.now() - startedAt.current) / 1000),
-    });
-  }
+  const submit = useCallback(
+    (asked: string) => {
+      startedAt.current = Date.now();
+      setQuestion(asked);
+      ask.mutate(asked, {
+        onSuccess: (result) => {
+          setActiveAnswer(
+            fromResponse(asked, result, (Date.now() - startedAt.current) / 1000),
+          );
+        },
+      });
+    },
+    [ask],
+  );
+
+  const selectHistoryEntry = useCallback((entry: AgentQuery) => {
+    setQuestion(entry.question);
+    setActiveAnswer(fromHistory(entry));
+  }, []);
+
+  /** Load a prompt into the input without running it. */
+  const useStarter = useCallback((starter: string) => setQuestion(starter), []);
 
   return (
     <div className="flex flex-col w-full gap-space-md">
       <MicroStrip stats={stats} />
-      <AskInput onSubmit={submit} isPending={ask.isPending} stats={stats} />
+      <AskInput
+        value={question}
+        onChange={setQuestion}
+        onSubmit={submit}
+        isPending={ask.isPending}
+        stats={stats}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
         <div className="lg:col-span-8 flex flex-col gap-space-md">
@@ -92,23 +118,26 @@ export function AskPanel({ stats, sources }: AskPanelProps) {
                 <div className="h-3 w-2/3 rounded bg-surface-container" />
               </div>
             </div>
-          ) : ask.data ? (
-            <AnswerBlock result={ask.data} elapsedSeconds={elapsed} />
+          ) : activeAnswer ? (
+            <AnswerBlock result={activeAnswer} />
           ) : (
-            <EmptyState
-              icon="neurology"
-              title="Ask the agent something"
-              hint="It searches the stored corpus first, and only reaches for live web search when the corpus cannot answer. Every claim it makes comes back with the articles behind it."
-            />
+            <AskEmptyState onUseStarter={useStarter} stats={stats} />
           )}
         </div>
 
-        <AgentStream
-          isPending={ask.isPending}
-          lastElapsed={elapsed}
-          stats={stats}
-          sources={sources}
-        />
+        <div className="lg:col-span-4 flex flex-col gap-space-md">
+          <AgentStream
+            isPending={ask.isPending}
+            lastElapsed={activeAnswer?.elapsedSeconds ?? null}
+            stats={stats}
+            sources={sources}
+          />
+          <ChatHistory
+            activeId={activeAnswer?.id ?? null}
+            onSelect={selectHistoryEntry}
+            onUseStarter={useStarter}
+          />
+        </div>
       </div>
     </div>
   );

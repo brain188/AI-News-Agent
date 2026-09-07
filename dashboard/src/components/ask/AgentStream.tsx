@@ -36,8 +36,9 @@ function ElapsedTimer() {
 export function AgentStream({ isPending, lastElapsed, stats, sources }: AgentStreamProps) {
   const healthy = (sources ?? []).filter((source) => source.status === "healthy");
 
+  // The rail's column span and gap belong to AskPanel; these are just panels.
   return (
-    <div className="lg:col-span-4 flex flex-col gap-space-md">
+    <>
       <div className="w-full bg-surface-container-low rounded-lg p-space-md shadow-sm flex flex-col gap-space-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-space-xs">
@@ -130,6 +131,6 @@ export function AgentStream({ isPending, lastElapsed, stats, sources }: AgentStr
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

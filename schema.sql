@@ -16,6 +16,8 @@ CREATE TABLE sources (
     authority_weight NUMERIC(3,2) NOT NULL DEFAULT 0.50, -- 0.00-1.00, used in ranking
     status          TEXT NOT NULL DEFAULT 'healthy' CHECK (status IN ('healthy', 'degraded', 'broken')),
     last_fetched_at TIMESTAMPTZ,
+    -- Advances only on a successful fetch; last_fetched_at advances on attempts.
+    last_success_at TIMESTAMPTZ,
     last_error      TEXT,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );

@@ -1,5 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { askAgent } from "../api/ask";
+import { ASK_HISTORY_KEY } from "./useAskHistory";
 
 /**
  * Submit a question to the agent.
@@ -8,5 +10,10 @@ import { askAgent } from "../api/ask";
  * `agent_queries`) and the answer is not a cacheable read.
  */
 export function useAsk() {
-  return useMutation({ mutationFn: askAgent });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: askAgent,
+    // Refresh history so the new entry appears without a manual reload.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ASK_HISTORY_KEY }),
+  });
 }

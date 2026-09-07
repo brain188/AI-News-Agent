@@ -29,6 +29,11 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     throw new ApiError(`Request failed: ${path}`, response.status);
   }
+
+  // DELETE endpoints answer 204 with no body; parsing that as JSON would throw.
+  if (response.status === 204 || response.headers.get("content-length") === "0") {
+    return undefined as T;
+  }
   return response.json() as Promise<T>;
 }
 
