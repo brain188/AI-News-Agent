@@ -36,7 +36,7 @@ async def run_enrichment() -> None:
         pending: list[tuple] = []
         duplicates = 0
 
-        for article, vector in zip(articles, vectors):
+        for article, vector in zip(articles, vectors, strict = True):
             match = await find_nearest_cluster(db, vector)
             if match:
                 await enrich_repo.add_cluster_member(

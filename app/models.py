@@ -49,18 +49,28 @@ class Source(Base):
     )
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
+        UUID(as_uuid=True), 
+        primary_key=True, 
+        default=uuid.uuid4, 
+        server_default=func.gen_random_uuid()
     )
     name: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
     source_type: Mapped[str] = mapped_column(Text, nullable=False)
     url: Mapped[str] = mapped_column(Text, nullable=False)
-    fetch_interval_minutes: Mapped[int] = mapped_column(Integer, default=60, server_default=text("60"))
+
+    fetch_interval_minutes: Mapped[int] = mapped_column(
+        Integer, 
+        default=60, 
+        server_default=text("60")
+    )
+    
     # 0.00-1.00, used in ranking.
     authority_weight: Mapped[Decimal] = mapped_column(
         Numeric(3, 2), default=Decimal("0.50"), server_default=text("0.50")
     )
     status: Mapped[str] = mapped_column(Text, default="healthy", server_default=text("'healthy'"))
     last_fetched_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+
     # Advances only on a successful fetch, unlike last_fetched_at.
     last_success_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
     last_error: Mapped[str | None] = mapped_column(Text)
@@ -75,13 +85,17 @@ class Article(Base):
     __table_args__ = (UniqueConstraint("source_id", "url", name="articles_source_id_url_key"),)
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
+        UUID(as_uuid=True), 
+        primary_key=True, 
+        default=uuid.uuid4, 
+        server_default=func.gen_random_uuid()
     )
     source_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("sources.id", ondelete="CASCADE"), nullable=False
     )
     url: Mapped[str] = mapped_column(Text, nullable=False)
     title: Mapped[str] = mapped_column(Text, nullable=False)
+
     # Full text if scraped/fetched, else NULL.
     raw_content: Mapped[str | None] = mapped_column(Text)
     published_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
@@ -96,7 +110,10 @@ class Cluster(Base):
     __tablename__ = "clusters"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
+        UUID(as_uuid=True), 
+        primary_key=True, 
+        default=uuid.uuid4, 
+        server_default=func.gen_random_uuid()
     )
     representative_article_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("articles.id")
@@ -132,10 +149,15 @@ class ArticleAnalysis(Base):
     article_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("articles.id", ondelete="CASCADE"), primary_key=True
     )
-    cluster_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("clusters.id"))
+    cluster_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), 
+        ForeignKey("clusters.id")
+    )
+
     summary: Mapped[str] = mapped_column(Text, nullable=False)
     category: Mapped[str] = mapped_column(Text, nullable=False)
     relevance_score: Mapped[Decimal] = mapped_column(Numeric(4, 3), nullable=False)
+    
     # Nullable: a row may be written before its embedding is computed.
     embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBEDDING_DIM))
     analyzed_at: Mapped[datetime] = mapped_column(
@@ -150,12 +172,16 @@ class PipelineRun(Base):
     )
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
+        UUID(as_uuid=True), 
+        primary_key=True, 
+        default=uuid.uuid4, 
+        server_default=func.gen_random_uuid()
     )
     started_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=utcnow, server_default=func.now()
     )
     finished_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+
     # The counter columns below count sources for an "ingest" run and articles
     # for an "enrich" run — this says which.
     kind: Mapped[str] = mapped_column(Text, default="ingest", server_default=text("'ingest'"))
@@ -173,7 +199,10 @@ class AgentQuery(Base):
     __tablename__ = "agent_queries"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid()
+        UUID(as_uuid=True), 
+        primary_key=True, 
+        default=uuid.uuid4, 
+        server_default=func.gen_random_uuid()
     )
     question: Mapped[str] = mapped_column(Text, nullable=False)
     answer: Mapped[str | None] = mapped_column(Text)

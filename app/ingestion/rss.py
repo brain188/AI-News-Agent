@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import feedparser
 import httpx
@@ -14,7 +14,7 @@ def _parse_published(entry) -> datetime | None:
     parsed = getattr(entry, "published_parsed", None) or getattr(entry, "updated_parsed", None)
     if not parsed:
         return None
-    return datetime(*parsed[:6], tzinfo=timezone.utc)
+    return datetime(*parsed[:6], tzinfo=UTC)
 
 
 class RSSFetcher(BaseFetcher):
@@ -26,7 +26,10 @@ class RSSFetcher(BaseFetcher):
         feed = feedparser.parse(body)
 
         if feed.bozo and not feed.entries:
-            log.warning("feed_parse_failed", source=self.source.name, error=str(feed.bozo_exception))
+            log.warning("feed_parse_failed", 
+                        source=self.source.name, 
+                        error=str(feed.bozo_exception)
+                    )
             return []
 
         items = []

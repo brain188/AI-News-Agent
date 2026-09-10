@@ -2,8 +2,7 @@ from datetime import UTC, date, datetime, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Query
-from sqlalchemy import cast, func, select
-from sqlalchemy.types import Date
+from sqlalchemy import Date, cast, func, select
 
 from app.config import settings
 from app.database import DbSession
@@ -29,14 +28,17 @@ async def _daily_volume(db: DbSession, days: int) -> list[DailyCount]:
     rows = (
         await db.execute(
             select(day_col, func.count())
-            .where(Article.fetched_at >= datetime.combine(first_day, datetime.min.time(), tzinfo=UTC))
+            .where(
+                Article.fetched_at 
+                >= datetime.combine(first_day, datetime.min.time(), tzinfo=UTC))
             .group_by(day_col)
         )
     ).all()
     counts: dict[date, int] = {row[0]: row[1] for row in rows}
 
     return [
-        DailyCount(day=first_day + timedelta(days=i), count=counts.get(first_day + timedelta(days=i), 0))
+        DailyCount(day=first_day + timedelta(days=i), 
+                   count=counts.get(first_day + timedelta(days=i), 0))
         for i in range(days)
     ]
 
@@ -54,7 +56,8 @@ async def get_stats(db: DbSession):
 
     since = datetime.now(tz=UTC) - timedelta(hours=24)
     articles_24h = (
-        await db.execute(select(func.count()).select_from(Article).where(Article.fetched_at >= since))
+        await db.execute(
+            select(func.count()).select_from(Article).where(Article.fetched_at >= since))
     ).scalar_one()
     total_articles = (await db.execute(select(func.count()).select_from(Article))).scalar_one()
 

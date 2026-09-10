@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import httpx
 
@@ -34,7 +34,7 @@ async def _fetch_source(
         filtered = apply_prefilter(items, trusted=trusted)
 
         # Feeds like OpenAI's serve their whole archive, so drop anything stale.
-        cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_ARTICLE_AGE_DAYS)
+        cutoff = datetime.now(UTC) - timedelta(days=MAX_ARTICLE_AGE_DAYS)
         recent = [
             item for item in filtered
             if item.published_at is None or item.published_at >= cutoff

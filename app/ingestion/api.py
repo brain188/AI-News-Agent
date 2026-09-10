@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import httpx
 
@@ -35,4 +35,4 @@ def _parse_timestamp(epoch: int | None) -> datetime | None:
     """Convert a Unix timestamp into a timezone-aware datetime."""
     if epoch is None:
         return None
-    return datetime.fromtimestamp(epoch, tz=timezone.utc)
+    return datetime.fromtimestamp(epoch, tz=UTC)

@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,7 +22,7 @@ class ClusterMatch:
 
 async def find_nearest_cluster(db: AsyncSession, embedding: list[float]) -> ClusterMatch | None:
     """Search recent cluster representatives for the closest match above threshold."""
-    since = datetime.now(timezone.utc) - timedelta(hours=settings.dedup_lookback_hours)
+    since = datetime.now(UTC) - timedelta(hours=settings.dedup_lookback_hours)
     distance = ArticleAnalysis.embedding.cosine_distance(embedding).label("distance")
 
     stmt = (

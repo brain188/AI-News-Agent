@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -62,7 +62,7 @@ async def filter_articles(
     if category:
         stmt = stmt.where(ArticleAnalysis.category == category)
     if days:
-        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+        cutoff = datetime.now(UTC) - timedelta(days=days)
         stmt = stmt.where(Article.published_at >= cutoff)
 
     rows = (await db.execute(stmt)).all()

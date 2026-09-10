@@ -53,7 +53,7 @@ async def run_agent(db: AsyncSession, question: str) -> AgentAnswer:
     used_live_search = False
     total_cost = 0.0
 
-    for step in range(settings.agent_max_iterations):
+    for _step in range(settings.agent_max_iterations):
         response = await _get_client().chat.completions.create(
             model=settings.llm_model,
             messages=messages,
