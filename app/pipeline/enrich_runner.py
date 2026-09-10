@@ -23,7 +23,7 @@ async def run_enrichment() -> None:
 
         if not articles:
             log.info("no_articles_to_enrich")
-            await repository.finish_run(db, run, 0, 0, 0, errors = [])
+            await repository.finish_run(db, run, 0, 0, 0, errors=[])
             await db.commit()
             return
 
@@ -36,7 +36,7 @@ async def run_enrichment() -> None:
         pending: list[tuple] = []
         duplicates = 0
 
-        for article, vector in zip(articles, vectors, strict = True):
+        for article, vector in zip(articles, vectors, strict=True):
             match = await find_nearest_cluster(db, vector)
             if match:
                 await enrich_repo.add_cluster_member(
@@ -100,7 +100,7 @@ async def run_enrichment() -> None:
 
         run.llm_cost_usd = total_cost
         await repository.finish_run(
-            db, run, len(articles), analyzed, len(articles), duplicates, errors = errors
+            db, run, len(articles), analyzed, len(articles), duplicates, errors=errors
         )
         await db.commit()
 

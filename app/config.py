@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     # Agent
     agent_max_iterations: int = 5
     agent_search_limit: int = 8
-    tavily_api_key: str = ""  
+    tavily_api_key: str = ""
 
     # App
     api_host: str = "0.0.0.0"
@@ -45,7 +45,9 @@ class Settings(BaseSettings):
         # The app uses create_async_engine; a sync DSN fails at startup with a
         # much less obvious error than this one.
         if "+asyncpg" not in v:
-            raise ValueError("database_url must use the asyncpg driver, e.g. postgresql+asyncpg://...")
+            raise ValueError(
+                "database_url must use the asyncpg driver, e.g. postgresql+asyncpg://..."
+            )
         return v
 
     @property

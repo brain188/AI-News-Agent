@@ -26,10 +26,9 @@ class RSSFetcher(BaseFetcher):
         feed = feedparser.parse(body)
 
         if feed.bozo and not feed.entries:
-            log.warning("feed_parse_failed", 
-                        source=self.source.name, 
-                        error=str(feed.bozo_exception)
-                    )
+            log.warning(
+                "feed_parse_failed", source=self.source.name, error=str(feed.bozo_exception)
+            )
             return []
 
         items = []

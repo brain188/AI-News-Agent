@@ -82,9 +82,7 @@ async def list_history(
             id=query.id,
             question=query.question,
             answer=query.answer,
-            cited_articles=[
-                by_id[i] for i in (query.cited_article_ids or []) if i in by_id
-            ],
+            cited_articles=[by_id[i] for i in (query.cited_article_ids or []) if i in by_id],
             used_live_search=query.used_live_search,
             created_at=query.created_at,
         )

@@ -36,8 +36,7 @@ async def _fetch_source(
         # Feeds like OpenAI's serve their whole archive, so drop anything stale.
         cutoff = datetime.now(UTC) - timedelta(days=MAX_ARTICLE_AGE_DAYS)
         recent = [
-            item for item in filtered
-            if item.published_at is None or item.published_at >= cutoff
+            item for item in filtered if item.published_at is None or item.published_at >= cutoff
         ]
 
         log.info(
@@ -57,7 +56,7 @@ async def run_ingestion() -> None:
 
         if not sources:
             log.info("no_sources_due")
-            await repository.finish_run(db, run, 0, 0, 0, errors = [])
+            await repository.finish_run(db, run, 0, 0, 0, errors=[])
             await db.commit()
             return
 
@@ -85,9 +84,7 @@ async def run_ingestion() -> None:
             succeeded += 1
             await repository.mark_source_result(db, source.id)
 
-        await repository.finish_run(
-            db, run, len(sources), succeeded, total_inserted, errors = errors
-        )
+        await repository.finish_run(db, run, len(sources), succeeded, total_inserted, errors=errors)
         await db.commit()
 
         log.info(

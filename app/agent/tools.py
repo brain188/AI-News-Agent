@@ -85,9 +85,7 @@ async def execute(db: AsyncSession, name: str, args: dict) -> list[dict]:
     log.info("tool_called", tool=name, args=args)
 
     if name == "search_articles":
-        return await retrieval.search_articles(
-            db, args["query"], limit=settings.agent_search_limit
-        )
+        return await retrieval.search_articles(db, args["query"], limit=settings.agent_search_limit)
 
     if name == "filter_articles":
         return await retrieval.filter_articles(

@@ -29,16 +29,17 @@ async def _daily_volume(db: DbSession, days: int) -> list[DailyCount]:
         await db.execute(
             select(day_col, func.count())
             .where(
-                Article.fetched_at 
-                >= datetime.combine(first_day, datetime.min.time(), tzinfo=UTC))
+                Article.fetched_at >= datetime.combine(first_day, datetime.min.time(), tzinfo=UTC)
+            )
             .group_by(day_col)
         )
     ).all()
     counts: dict[date, int] = {row[0]: row[1] for row in rows}
 
     return [
-        DailyCount(day=first_day + timedelta(days=i), 
-                   count=counts.get(first_day + timedelta(days=i), 0))
+        DailyCount(
+            day=first_day + timedelta(days=i), count=counts.get(first_day + timedelta(days=i), 0)
+        )
         for i in range(days)
     ]
 
@@ -57,7 +58,8 @@ async def get_stats(db: DbSession):
     since = datetime.now(tz=UTC) - timedelta(hours=24)
     articles_24h = (
         await db.execute(
-            select(func.count()).select_from(Article).where(Article.fetched_at >= since))
+            select(func.count()).select_from(Article).where(Article.fetched_at >= since)
+        )
     ).scalar_one()
     total_articles = (await db.execute(select(func.count()).select_from(Article))).scalar_one()
 
@@ -87,8 +89,10 @@ async def get_stats(db: DbSession):
 async def list_runs(db: DbSession, limit: Annotated[int, Query(ge=1, le=100)] = 10):
     """Recent pipeline runs, newest first — the source of the execution log."""
     rows = (
-        await db.execute(select(PipelineRun).order_by(PipelineRun.started_at.desc()).limit(limit))
-    ).scalars().all()
+        (await db.execute(select(PipelineRun).order_by(PipelineRun.started_at.desc()).limit(limit)))
+        .scalars()
+        .all()
+    )
     return [
         RunOut(
             id=run.id,
