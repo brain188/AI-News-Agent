@@ -336,7 +336,7 @@ lower it toward 0.87 if obvious duplicates stay separate.
 
 ## Demo
 
-![Video Demo](docs/demo/AI-News_Agent)
+![Video Demo](docs/demo/AI-News-Agent.mp4)
 
 ---
 
