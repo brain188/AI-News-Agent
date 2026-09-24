@@ -1,24 +1,4 @@
 services:
-  db:
-    image: pgvector/pgvector:pg16
-    container_name: ai_news_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      # Runs only on first init, i.e. when the pgdata volume is empty.
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   api:
     build: .
     container_name: ai_news_api
@@ -28,15 +8,8 @@ services:
       # the API needs to boot is defaulted in app/config.py.
       - path: .env
         required: false
-    environment:
-      # Overrides the .env value: inside this container "localhost" is the API
-      # itself, so the database must be reached by its compose service name.
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     ports:
       - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
     # Bind-mounted so --reload actually picks up local edits.
     volumes:
       - ./app:/app/app:ro
@@ -50,11 +23,4 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       PIPELINE_INTERVAL_SECONDS: 3600
-    depends_on:
-      db:
-        condition: service_healthy
-
-volumes:
-  pgdata:

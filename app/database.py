@@ -11,9 +11,7 @@ engine = create_async_engine(
     echo=False,
     pool_size=10,
     max_overflow=20,
-    # Postgres (or a proxy) can drop idle connections; without this the first
-    # query on a stale pooled connection fails instead of transparently reconnecting.
-    pool_pre_ping=True,
+    connect_args={"statement_cache_size": 0},
 )
 
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
